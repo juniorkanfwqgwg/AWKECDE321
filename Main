@@ -3,283 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awakening Bangkok</title>
+    <title>My AR App</title>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar-js@1.0.0/dist/mindar-image.min.js"></script>
     <style>
-        * {
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            height: 100vh;
         }
-
-        /* หน้าแรก */
-        .background {
+        #ar-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        #ar-video, #ar-canvas {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@0355cfaddfc79ff37235fd0030209907f17fb241/BG.png');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.7);
+        }
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
             display: flex;
-            align-items: center;
             justify-content: center;
+            gap: 10px;
         }
-
-        .logo {
+        .button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
-
-        .logo img {
-            max-width: 50%;
-            height: auto;
-        }
-
-        /* หน้าใหม่ (หน้า 2) */
-        .background-new {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@1a03e934ffc5bffd9a24a369a8426911be010692/MAIN%20OBJECT.png');
-            background-size: cover;
-            background-position: center;
-            width: 100vw;
-            height: 100vh;
+        #share-container {
             position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2;
-        }
-
-        .logo-new {
-            position: absolute;
-            top: -2%;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            mix-blend-mode: screen;
-        }
-
-        .logo-new img {
-            width: 350px;
-        }
-
-        .sticker, .ar {
-            position: absolute;
-            transform: translateY(3%);
-            cursor: pointer;
-            mix-blend-mode: screen;
-            transition: transform 2.5s ease, opacity 0.5s ease;
-        }
-
-        .sticker {
-            top: 50%;
-            left: 17%;
-            animation: slideUp 2s ease-in-out forwards;
-        }
-
-        .ar {
-            top: 31%;
-            right: 13%;
-            animation: slideDown 2s ease-in-out forwards;
-        }
-
-        .sticker img, .ar img {
-            width: 150px;
-            display: block;
-        }
-
-        .expand {
-            transform: scale(1.1) translateY(-50%);
-            opacity: 0.8;
-        }
-
-        /* หน้า Interactive Carousel */
-        .container {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@8756dba569289668fcf390e249ce499566e9984a/3/BGstik.png');
-            background-size: cover;
-            background-position: center;
+            top: 10%;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            position: absolute;
-            top: 0;
-            left: 0;
+            gap: 10px;
+            color: white;
         }
-
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 60px;
-            height: 60px;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@8756dba569289668fcf390e249ce499566e9984a/3/Top%20R.png');
-            background-size: contain;
-            background-repeat: no-repeat;
+        #share-container img {
+            width: 50px;
             cursor: pointer;
-        }
-
-        .circle {
-            width: 500px;
-            height: 500px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 175px;
-        }
-
-        .circle-frame {
-            position: absolute;
-            top: -100px;
-            left: 55px;
-            width: 110%;
-            height: 110%;
-            mix-blend-mode: screen;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@afc076b3e8545f459c51ac346182320b5450ffe6/3/Circle.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 1;
-        }
-
-        .circle img {
-            border-radius: 50%;
-            object-fit: cover;
-            position: absolute;
-            z-index: 0;
-            transition: all 0.3s;
-        }
-
-        .arrow-left, .arrow-right {
-            width: 80px;
-            height: 80px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            cursor: pointer;
-            position: absolute;
-            top: 210%;
-            transform: translateY(-210%);
-            transition: opacity 0.15s;
-        }
-
-        .arrow-left {
-            left: 77px;
-            top: 730px;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@8756dba569289668fcf390e249ce499566e9984a/3/L.png');
-        }
-
-        .arrow-right {
-            right: 67px;
-            top: 730px;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@8756dba569289668fcf390e249ce499566e9984a/3/R.png');
-        }
-
-        .item-name {
-            width: 500px;
-            height: 150px;
-            background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@8756dba569289668fcf390e249ce499566e9984a/3/Frame.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-size: 1.5em;
-            margin-left: 215px;
-            margin-top: -150px;
-            text-align: center;
         }
     </style>
 </head>
 <body>
-    <!-- หน้าแรก -->
-    <div class="background" id="background">
-        <div class="logo" onclick="goToNextPage()">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@0355cfaddfcf79ff37235fd0030209907f17fb241/AWKENING%20LOGO.png" alt="Awakening Bangkok Logo">
+    <div id="ar-container">
+        <video id="ar-video" autoplay></video>
+        <canvas id="ar-canvas"></canvas>
+
+        <div id="controls">
+            <button class="button" id="capture-btn">Capture</button>
+        </div>
+
+        <div id="share-container" style="display: none;">
+            <img src="facebook-icon.png" alt="Share on Facebook" onclick="shareToFacebook()">
+            <img src="instagram-icon.png" alt="Share on Instagram" onclick="shareToInstagram()">
+            <img src="twitter-icon.png" alt="Share on Twitter" onclick="shareToTwitter()">
+            <button class="button" onclick="saveImage()">Save Here</button>
         </div>
     </div>
 
-    <!-- หน้าใหม่ (หน้า 2) -->
-    <div class="background-new" id="backgroundNew">
-        <div class="logo-new">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@752723f272394a9899c94d7653819849ebecc3ce/Logo%20กลุ่ม.png" alt="Logo">
-        </div>
-        <div class="sticker" id="sticker" onclick="showCarousel()">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@752723f272394a9899c94d7653819849ebecc3ce/STRIKER.png" alt="Sticker Button">
-        </div>
-        <div class="ar" id="ar" onclick="openARPage()">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@752723f272394a9899c94d7653819849ebecc3ce/AR.png" alt="AR Button">
-        </div>
-    </div>
-
-    <!-- หน้า Interactive Carousel -->
-    <div class="container" id="carouselContainer">
-        <div class="back-button" onclick="goBack()"></div>
-        <div class="circle" id="imageContainer">
-            <div class="circle-frame"></div>
-            <img id="currentImage" src="https://via.placeholder.com/400" alt="Image">
-        </div>
-        <div class="arrow-left" id="arrowLeft" onclick="changeImage('prev')"></div>
-        <div class="arrow-right" id="arrowRight" onclick="changeImage('next')"></div>
-        <div class="item-name" id="itemName">Tuk Tuk</div>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const items = [
-            { src: "https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@9f25f410e969edd8cf2a6c25a773008e6b6baaf3/Stickers-2/Untitled_Artwork.png", name: "Item 1", width: "300px", height: "300px", top: "40px", left: "95px" },
-            { src: "https://via.placeholder.com/400?text=Image+2", name: "Item 2", width: "400px", height: "400px", top: "0px", left: "10px" },
-            { src: "https://via.placeholder.com/400?text=Image+3", name: "Item 3", width: "350px", height: "350px", top: "-20px", left: "-10px" },
-            { src: "https://via.placeholder.com/400?text=Image+4", name: "Item 4", width: "380px", height: "380px", top: "30px", left: "15px" },
-            { src: "https://via.placeholder.com/400?text=Image+5", name: "Item 5", width: "420px", height: "420px", top: "-10px", left: "5px" }
-        ];
+        import { MindAR } from 'mind-ar-js';
 
-        let currentIndex = 0;
+        document.addEventListener("DOMContentLoaded", () => {
+            const mindarThree = new MindAR({
+                videoElement: document.getElementById('ar-video'),
+                canvasElement: document.getElementById('ar-canvas')
+            });
 
-        function goToNextPage() {
-            document.getElementById("background").style.display = "none";
-            document.getElementById("backgroundNew").style.display = "flex";
-        }
+            const markers = [
+                'marker1.png',
+                'marker2.png',
+                'marker3.png',
+                'marker4.png',
+                'marker5.png'
+            ];
 
-        function showCarousel() {
-            document.getElementById("backgroundNew").style.display = "none";
-            document.getElementById("carouselContainer").style.display = "flex";
-            updateDisplay();
-        }
+            markers.forEach((marker, index) => {
+                mindarThree.addMarker({
+                    image: marker,
+                    onFound: () => {
+                        console.log(`Marker ${index + 1} found!`);
+                    },
+                    onLost: () => {
+                        console.log(`Marker ${index + 1} lost!`);
+                    }
+                });
+            });
 
-        function goBack() {
-            document.getElementById("carouselContainer").style.display = "none";
-            document.getElementById("backgroundNew").style.display = "flex";
-        }
+            mindarThree.start();
 
-        function changeImage(direction) {
-            currentIndex = direction === 'prev' ? (currentIndex - 1 + items.length) % items.length : (currentIndex + 1) % items.length;
-            updateDisplay();
-        }
+            const captureButton = document.getElementById('capture-btn');
+            const shareContainer = document.getElementById('share-container');
+            const arCanvas = document.getElementById('ar-canvas');
 
-        function updateDisplay() {
-            const item = items[currentIndex];
-            const imageElement = document.getElementById("currentImage");
-            imageElement.src = item.src;
-            imageElement.style.width = item.width;
-            imageElement.style.height = item.height;
-            imageElement.style.top = item.top;
-            imageElement.style.left = item.left;
-            document.getElementById("itemName").textContent = item.name;
-        }
+            captureButton.addEventListener('click', () => {
+                const imageData = arCanvas.toDataURL('image/png');
+                showShareOptions(imageData);
+            });
 
-        function openARPage() {
-            alert("Navigating to AR page");
-        }
+            function showShareOptions(imageData) {
+                shareContainer.style.display = 'flex';
+                // Save imageData for sharing
+                window.capturedImage = imageData;
+            }
+
+            function shareToFacebook() {
+                const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.capturedImage)}`;
+                window.open(url, '_blank');
+            }
+
+            function shareToInstagram() {
+                alert('Instagram sharing not supported by URL. Please save and upload manually.');
+            }
+
+            function shareToTwitter() {
+                const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.capturedImage)}`;
+                window.open(url, '_blank');
+            }
+
+            function saveImage() {
+                const link = document.createElement('a');
+                link.href = window.capturedImage;
+                link.download = 'my_ar_image.png';
+                link.click();
+            }
+        });
     </script>
 </body>
 </html>
