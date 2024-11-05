@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My AR App</title>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar-js@1.0.0/dist/mindar-image.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            height: 100vh;
+        }
+        #ar-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        #ar-video, #ar-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #share-container {
+            position: absolute;
+            top: 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+        #share-container img {
+            width: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="ar-container">
+        <video id="ar-video" autoplay></video>
+        <canvas id="ar-canvas"></canvas>
+
+        <div id="controls">
+            <button class="button" id="capture-btn">Capture</button>
+        </div>
+
+        <div id="share-container" style="display: none;">
+            <img src="facebook-icon.png" alt="Share on Facebook" onclick="shareToFacebook()">
+            <img src="instagram-icon.png" alt="Share on Instagram" onclick="shareToInstagram()">
+            <img src="twitter-icon.png" alt="Share on Twitter" onclick="shareToTwitter()">
+            <button class="button" onclick="saveImage()">Save Here</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        import { MindAR } from 'mind-ar-js';
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const mindarThree = new MindAR({
+                videoElement: document.getElementById('ar-video'),
+                canvasElement: document.getElementById('ar-canvas')
+            });
+
+            const markers = [
+                'marker1.png',
+                'marker2.png',
+                'marker3.png',
+                'marker4.png',
+                'marker5.png'
+            ];
+
+            markers.forEach((marker, index) => {
+                mindarThree.addMarker({
+                    image: marker,
+                    onFound: () => {
+                        console.log(`Marker ${index + 1} found!`);
+                    },
+                    onLost: () => {
+                        console.log(`Marker ${index + 1} lost!`);
+                    }
+                });
+            });
+
+            mindarThree.start();
+
+            const captureButton = document.getElementById('capture-btn');
+            const shareContainer = document.getElementById('share-container');
+            const arCanvas = document.getElementById('ar-canvas');
+
+            captureButton.addEventListener('click', () => {
+                const imageData = arCanvas.toDataURL('image/png');
+                showShareOptions(imageData);
+            });
+
+            function showShareOptions(imageData) {
+                shareContainer.style.display = 'flex';
+                // Save imageData for sharing
+                window.capturedImage = imageData;
+            }
+
+            function shareToFacebook() {
+                const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.capturedImage)}`;
+                window.open(url, '_blank');
+            }
+
+            function shareToInstagram() {
+                alert('Instagram sharing not supported by URL. Please save and upload manually.');
+            }
+
+            function shareToTwitter() {
+                const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.capturedImage)}`;
+                window.open(url, '_blank');
+            }
+
+            function saveImage() {
+                const link = document.createElement('a');
+                link.href = window.capturedImage;
+                link.download = 'my_ar_image.png';
+                link.click();
+            }
+        });
+    </script>
+</body>
+</html>
