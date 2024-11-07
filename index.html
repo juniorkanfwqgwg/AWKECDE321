@@ -3,17 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web AR Scanner</title>
+    <title>Web AR Scanner with Multiple Targets</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
     <!-- A-Frame scene -->
     <a-scene embedded arjs>
-        <!-- ใช้โมเดล 3D หรือ object AR ที่ต้องการ -->
-        <a-marker preset="hiro">
+
+        <!-- Marker 1 -->
+        <a-marker preset="custom" type="pattern" url="target1.patt">
             <a-box position="0 0.5 0" material="color: red"></a-box>
         </a-marker>
+
+        <!-- Marker 2 -->
+        <a-marker preset="custom" type="pattern" url="target2.patt">
+            <a-sphere position="0 0.5 0" radius="0.3" material="color: blue"></a-sphere>
+        </a-marker>
+
+        <!-- Marker 3 -->
+        <a-marker preset="custom" type="pattern" url="target3.patt">
+            <a-cylinder position="0 0.5 0" radius="0.3" height="0.7" material="color: green"></a-cylinder>
+        </a-marker>
+
+        <!-- Marker 4 -->
+        <a-marker preset="custom" type="pattern" url="target4.patt">
+            <a-cone position="0 0.5 0" radius-bottom="0.3" height="0.7" material="color: yellow"></a-cone>
+        </a-marker>
+
+        <!-- Marker 5 -->
+        <a-marker preset="custom" type="pattern" url="target5.patt">
+            <a-torus position="0 0.5 0" radius="0.3" radius-tubular="0.05" material="color: purple"></a-torus>
+        </a-marker>
+
         <a-entity camera></a-entity>
     </a-scene>
 </body>
