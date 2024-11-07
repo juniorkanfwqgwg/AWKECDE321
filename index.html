@@ -3,119 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awakening Bangkok</title>
-    <style>
-        /* คงโค้ด CSS เดิมไว้ตามที่คุณให้มา */
-    </style>
+    <title>Web AR Scanner</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.min.js"></script>
 </head>
-<body>
-    <!-- หน้าแรก -->
-    <div class="background" id="background" onclick="goToNextPage()">
-        <div class="logo">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@0355cfaddfc79ff37235fd0030209907f17fb241/AWKENING%20LOGO.png" alt="Awakening Bangkok Logo">
-        </div>
-    </div>
-
-    <!-- หน้าใหม่ (หน้า 2) -->
-    <div class="background-new" id="backgroundNew">
-        <div class="logo-new">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@70df8898b0a66e54925b81f87192830d7d8ee950/1_1%20EP.1%20No%20bg%20_0.png" alt="Logo">
-        </div>
-        <div class="sticker" id="sticker" onclick="showCarousel()">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@752723f272394a9899c94d7653819849ebecc3ce/STRIKER.png" alt="Sticker Button">
-        </div>
-        <div class="google-link" id="googleLink" onclick="goToGoogle()">
-            <img src="https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@752723f272394a9899c94d7653819849ebecc3ce/AR.png" alt="Google Link">
-        </div>
-    </div>
-
-    <!-- หน้า Interactive Carousel -->
-    <div class="container" id="carouselContainer">
-        <div class="back-button" onclick="goBack()"></div>
-        
-        <!-- พื้นที่แสดง Preview -->
-        <div class="preview-area">
-            <img id="previewImage" src="https://via.placeholder.com/150" alt="Preview" />
-        </div>
-
-        <!-- พื้นที่เลื่อนกรอบ -->
-        <div class="carousel-grid-wrapper" id="carouselGridWrapper">
-            <div class="carousel-grid">
-                <!-- กรอบทั้ง 14 อัน -->
-                <div class="grid-item" style="background-image: url('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@9f25f410e969edd8cf2a6c25a773008e6b6baaf3/Stickers-2/Untitled_Artwork%20(1).png');" onclick="showPreview('https://cdn.jsdelivr.net/gh/juniorkanfwqgwg/AWKECDE321@9f25f410e969edd8cf2a6c25a773008e6b6baaf3/Stickers-2/Untitled_Artwork%20(1).png')"></div>
-                <!-- เพิ่มกรอบอื่น ๆ ที่เหลือให้ครบ 14 อัน -->
-            </div>
-        </div>
-
-        <div class="confirm-button" onclick="confirmSelection()">CONFIRM</div>
-    </div>
-
-    <!-- หน้า Preview หลังจากกด Confirm -->
-    <div class="preview-container" id="previewContainer">
-        <div class="back-button" onclick="goBackToCarousel()"></div>
-        <div class="preview-selected" id="selectedPreview"></div>
-        <div class="send-button">SEND STICKER!</div>
-    </div>
-
-    <script>
-        let selectedSticker = "";
-
-        function goToNextPage() {
-            document.getElementById("background").style.display = "none";
-            document.getElementById("backgroundNew").style.display = "flex";
-        }
-
-        function showCarousel() {
-            document.getElementById("backgroundNew").style.display = "none";
-            document.getElementById("carouselContainer").style.display = "flex";
-            document.getElementById("carouselGridWrapper").style.display = "block";
-        }
-
-        function goBack() {
-            document.getElementById("carouselContainer").style.display = "none";
-            document.getElementById("backgroundNew").style.display = "flex";
-        }
-
-        function showPreview(imageUrl) {
-            document.getElementById("previewImage").src = imageUrl;
-            selectedSticker = imageUrl;
-            console.log("Sticker selected:", selectedSticker);
-        }
-
-        function confirmSelection() {
-            if (selectedSticker) {
-                console.log("Confirm button clicked, sending image:", selectedSticker);
-                
-                // ส่งภาพไปยังระบบ Green Screen (หลังบ้าน)
-                fetch('https://your-greenscreen-url.com/update-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ imageUrl: selectedSticker }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Image sent to Green Screen:', data);
-                    
-                    // หลังจากส่งข้อมูลเสร็จ กลับไปยังหน้าแรก
-                    document.getElementById("carouselContainer").style.display = "none";
-                    document.getElementById("previewContainer").style.display = "none";
-                    document.getElementById("background").style.display = "flex";
-                })
-                .catch((error) => {
-                    console.error('Error sending image to Green Screen:', error);
-                    alert('เกิดข้อผิดพลาดในการส่งภาพไปยัง Green Screen');
-                });
-            } else {
-                alert("กรุณาเลือกสติกเกอร์ก่อนกด Confirm!");
-            }
-        }
-
-        function goBackToCarousel() {
-            document.getElementById("previewContainer").style.display = "none";
-            document.getElementById("carouselContainer").style.display = "flex";
-        }
-    </script>
+<body style="margin: 0; overflow: hidden;">
+    <!-- A-Frame scene -->
+    <a-scene embedded arjs>
+        <!-- ใช้โมเดล 3D หรือ object AR ที่ต้องการ -->
+        <a-marker preset="hiro">
+            <a-box position="0 0.5 0" material="color: red"></a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
 </body>
 </html>
